@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>幸win上上签 · 记录</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        /* 样式保持不变 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: #e8f4f8;
+            background-image: radial-gradient(circle at 10% 20%, #d4edf5 0%, #bde0e9 100%);
+            min-height: 100vh;
+            padding: 18px 14px 40px;
+            display: flex;
+            justify-content: center;
+        }
+        .app {
+            max-width: 820px;
+            width: 100%;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1f5a7a;
+            text-shadow: 0 2px 4px rgba(120, 190, 220, 0.3);
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #2a7a9e, #5ba3c7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        .header .sub {
+            font-size: 0.9rem;
+            color: #2d6b8a;
+            background: rgba(210, 235, 245, 0.7);
+            padding: 4px 16px;
+            border-radius: 30px;
+            display: inline-block;
+            backdrop-filter: blur(2px);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .progress-section {
+            background: rgba(235, 248, 252, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            border: 2px solid #8dc3d9;
+        }
+        .progress-section .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1f5a7a;
+            margin-bottom: 6px;
+        }
+        .progress-section .progress-track {
+            width: 100%;
+            height: 14px;
+            background: #cfe3ed;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-section .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f5d742, #e8b820);
+            border-radius: 30px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .progress-section .progress-markers {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.55rem;
+            color: #4a7a8a;
+            margin-top: 4px;
+            padding: 0 2px;
+        }
+        .progress-section .progress-markers span {
+            background: rgba(255,255,255,0.4);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .stat-item {
+            background: rgba(235, 248, 252, 0.75);
+            backdrop-filter: blur(6px);
+            border-radius: 16px;
+            padding: 8px 6px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(60, 140, 180, 0.10);
+            border: 1px solid rgba(160, 210, 230, 0.4);
+        }
+        .stat-item .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #2d6b8a;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .stat-item .row1 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4f6a;
+            margin-top: 2px;
+        }
+        .stat-item .row2 {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #4a7a8a;
+            margin-top: 1px;
+        }
+        .stat-item .row1 .pct {
+            font-size: 0.7rem;
+            color: #6a8a9a;
+            margin-left: 4px;
+        }
+        .stat-item.total .row1 { color: #1f6a8a; }
+        .stat-item.r .row1 { color: #3a7b9f; }
+        .stat-item.sr .row1 { color: #7a5fc0; }
+        .stat-item.ssr .row1 { color: #d48c2c; }
+        .stat-item.pr .row1 { color: #d48c2c; }
+        .stat-item.special .row1 { color: #b35e2a; }
+        .stat-item.completion .row1 { color: #2a7a5e; }
+
+        .gift-section {
+            background: rgba(235, 248, 252, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+            border: 2px solid #8dc3d9;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .gift-section .gift-info {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 20px;
+        }
+        .gift-section .gift-label {
+            font-weight: 700;
+            color: #1f5a7a;
+            font-size: 1rem;
+        }
+        .gift-section .gift-badge {
+            background: #4a9bc2;
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .gift-section .gift-badge.active {
+            background: #e8b820;
+            color: #1a4f6a;
+        }
+        .gift-section .gift-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            font-size: 0.9rem;
+            color: #1a4f6a;
+            font-weight: 500;
+        }
+        .gift-section .gift-list .gift-card {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 2px 12px;
+            border-radius: 30px;
+            border: 1px solid #b0d4e3;
+        }
+        .gift-section .gift-empty {
+            color: #6a9fb8;
+            font-size: 0.85rem;
+        }
+        .gift-section .btn-gift-reset {
+            background: none;
+            border: 1px solid #8dc3d9;
+            color: #2d6b8a;
+            padding: 4px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.1s;
+        }
+        .gift-section .btn-gift-reset:active {
+            background: rgba(74, 155, 194, 0.15);
+        }
+
+        .record-form {
+            background: rgba(235, 248, 252, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 20px 18px;
+            margin-bottom: 18px;
+            border: 2px dashed #8dc3d9;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            gap: 12px 16px;
+        }
+        .record-form .field {
+            flex: 1 1 140px;
+            min-width: 120px;
+        }
+        .record-form .field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #2d6b8a;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+        .record-form .field select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 30px;
+            border: 1px solid #8dc3d9;
+            background: rgba(245, 250, 252, 0.85);
+            font-size: 0.95rem;
+            color: #1a4f6a;
+            outline: none;
+            transition: 0.15s;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%233a7b9f' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+        .record-form .field select:focus {
+            border-color: #4a9bc2;
+            box-shadow: 0 0 0 3px rgba(74, 155, 194, 0.25);
+        }
+        .record-form .btn-record {
+            background: linear-gradient(145deg, #f5d742, #e8b820);
+            border: none;
+            border-radius: 60px;
+            padding: 10px 32px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2a5a3a;
+            box-shadow: 0 4px 0 #b89a28, 0 4px 12px rgba(180, 150, 40, 0.25);
+            cursor: pointer;
+            transition: all 0.08s linear;
+            flex: 0 0 auto;
+            margin-left: auto;
+            letter-spacing: 1px;
+            align-self: center;
+        }
+        .record-form .btn-record:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #b89a28, 0 4px 12px rgba(180, 150, 40, 0.2);
+        }
+
+        .promo-section {
+            background: rgba(235, 248, 252, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            border: 2px solid #b0c4d9;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .promo-section .promo-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .promo-section .promo-label {
+            font-weight: 700;
+            color: #1f5a7a;
+            font-size: 1rem;
+        }
+        .promo-section .promo-btn {
+            padding: 6px 24px;
+            border-radius: 40px;
+            border: none;
+            background: #4a9bc2;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.1s;
+        }
+        .promo-section .promo-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #a0c4d4;
+        }
+        .promo-section .promo-btn:active:not(:disabled) {
+            background: #2d7a9e;
+        }
+        .promo-section .promo-status {
+            font-size: 0.8rem;
+            color: #4a7a8a;
+        }
+
+        .manual-pr-section {
+            background: rgba(235, 248, 252, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+            border: 2px solid #b0c4d9;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px 24px;
+        }
+        .manual-pr-section .pr-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+        }
+        .manual-pr-section .pr-group-label {
+            font-weight: 700;
+            color: #1f5a7a;
+            font-size: 0.85rem;
+            margin-right: 4px;
+        }
+        .manual-pr-section .pr-btn {
+            padding: 4px 14px;
+            border-radius: 30px;
+            border: 1px solid #8dc3d9;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1f5a7a;
+            transition: 0.1s;
+        }
+        .manual-pr-section .pr-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #d0dce4;
+        }
+        .manual-pr-section .pr-btn:active:not(:disabled) {
+            background: rgba(74, 155, 194, 0.2);
+        }
+        .manual-pr-section .pr-btn.used {
+            opacity: 0.4;
+            text-decoration: line-through;
+            pointer-events: none;
+        }
+        .manual-pr-section .pr-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            font-size: 0.8rem;
+            color: #1a4f6a;
+        }
+        .manual-pr-section .pr-list .pr-item {
+            background: rgba(255,255,240,0.5);
+            padding: 1px 12px;
+            border-radius: 30px;
+            border: 1px solid #b8cfe0;
+            font-size: 0.75rem;
+        }
+        .manual-pr-section .pr-empty {
+            color: #6a9fb8;
+            font-size: 0.75rem;
+        }
+
+        .pity-section {
+            background: rgba(235, 248, 252, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+            border: 2px solid #b0c4d9;
+        }
+        .pity-section .pity-title {
+            font-weight: 700;
+            color: #1f5a7a;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .pity-section .pity-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+        }
+        .pity-section .pity-row select {
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: 1px solid #8dc3d9;
+            background: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            color: #1a4f6a;
+            outline: none;
+            min-width: 140px;
+        }
+        .pity-section .pity-row .pity-btn {
+            padding: 6px 20px;
+            border-radius: 40px;
+            border: none;
+            background: #4a9bc2;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.1s;
+        }
+        .pity-section .pity-row .pity-btn:active {
+            background: #2d7a9e;
+        }
+        .pity-section .pity-info {
+            font-size: 0.8rem;
+            color: #4a7a8a;
+            margin-top: 8px;
+        }
+        .pity-section .pity-note {
+            font-size: 0.7rem;
+            color: #6a8a9a;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .history-section {
+            background: rgba(235, 248, 252, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 16px 12px 8px;
+            border: 1px solid rgba(140, 195, 215, 0.4);
+            box-shadow: 0 6px 20px rgba(60, 140, 180, 0.08);
+            margin-bottom: 18px;
+        }
+        .history-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1f5a7a;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #c5dfeb;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-title .clear-btn {
+            background: none;
+            border: none;
+            color: #4a8aaa;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 30px;
+            background: rgba(74, 155, 194, 0.12);
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .history-title .clear-btn:active {
+            background: rgba(74, 155, 194, 0.25);
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .history-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .history-list::-webkit-scrollbar-track {
+            background: #c5dfeb;
+            border-radius: 10px;
+        }
+        .history-list::-webkit-scrollbar-thumb {
+            background: #8bbdd5;
+            border-radius: 10px;
+        }
+
+        .history-item {
+            display: grid;
+            grid-template-columns: 100px 70px 1fr 50px;
+            align-items: center;
+            padding: 6px 8px;
+            border-bottom: 1px solid #cfe3ed;
+            font-size: 0.8rem;
+            gap: 6px;
+            background: rgba(245, 250, 252, 0.3);
+            border-radius: 10px;
+            margin-bottom: 3px;
+        }
+        .history-item .time {
+            color: #2d6b8a;
+            font-weight: 500;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        .history-item .rarity {
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .history-item .rarity.r { color: #3a7b9f; }
+        .history-item .rarity.sr { color: #7a5fc0; }
+        .history-item .rarity.ssr { color: #d48c2c; }
+        .history-item .rarity.pr { color: #d48c2c; background: rgba(212,140,44,0.12); padding:0 6px; border-radius:12px; }
+        .history-item .rarity.gift { color: #c47a2a; background: rgba(196,122,42,0.10); padding:0 6px; border-radius:12px; }
+        .history-item .rarity.special { color: #b35e2a; background: rgba(179,94,42,0.10); padding:0 6px; border-radius:12px; }
+        .history-item .rarity.limited { color: #8a6a3a; background: rgba(138,106,58,0.10); padding:0 6px; border-radius:12px; }
+        .history-item .rarity.exchange { color: #2a7a5e; background: rgba(42,122,94,0.10); padding:0 6px; border-radius:12px; }
+        .history-item .rarity.promo { color: #b35e2a; background: rgba(179,94,42,0.10); padding:0 6px; border-radius:12px; }
+        .history-item .rarity.manual { color: #6a5a7a; background: rgba(106,90,122,0.10); padding:0 6px; border-radius:12px; }
+        .history-item .card {
+            font-weight: 600;
+            color: #1a4f6a;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .history-item .del-btn {
+            background: none;
+            border: none;
+            color: #5a9abb;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 30px;
+            transition: 0.1s;
+            font-weight: 700;
+            text-align: right;
+        }
+        .history-item .del-btn:active {
+            background: rgba(74,155,194,0.2);
+            color: #2d7a9e;
+        }
+        .empty-history {
+            text-align: center;
+            color: #6a9fb8;
+            padding: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .collection-view {
+            background: rgba(235, 248, 252, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 28px;
+            padding: 16px 18px;
+            border: 2px solid #b0c4d9;
+            margin-bottom: 18px;
+        }
+        .collection-view .cv-title {
+            font-weight: 700;
+            color: #1f5a7a;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .collection-view .cv-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+            margin-bottom: 12px;
+        }
+        .collection-view .cv-controls select,
+        .collection-view .cv-controls button {
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: 1px solid #8dc3d9;
+            background: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            color: #1a4f6a;
+            outline: none;
+            cursor: pointer;
+        }
+        .collection-view .cv-controls button {
+            background: #4a9bc2;
+            color: #fff;
+            border: none;
+            font-weight: 600;
+        }
+        .collection-view .cv-controls button:active {
+            background: #2d7a9e;
+        }
+        .collection-view .cv-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 4px 2px;
+        }
+        .collection-view .cv-grid .cv-item {
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            padding: 4px 6px;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1a4f6a;
+            border: 1px solid #cfe3ed;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .collection-view .cv-grid .cv-item.owned {
+            background: rgba(74, 155, 194, 0.15);
+            border-color: #4a9bc2;
+        }
+        .collection-view .cv-grid .cv-item.missing {
+            opacity: 0.5;
+            background: rgba(220,220,220,0.2);
+            border-color: #d0d8e0;
+        }
+        .collection-view .cv-empty {
+            text-align: center;
+            color: #6a9fb8;
+            padding: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .record-form {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .record-form .field {
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+            .record-form .btn-record {
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+            }
+            .gift-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .gift-section .gift-info {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px;
+            }
+            .promo-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .manual-pr-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .manual-pr-section .pr-group {
+                flex-wrap: wrap;
+            }
+            .pity-section .pity-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .pity-section .pity-row select {
+                min-width: unset;
+            }
+            .history-item {
+                grid-template-columns: 70px 55px 1fr 40px;
+                font-size: 0.7rem;
+                gap: 4px;
+                padding: 6px 4px;
+            }
+            .history-item .time {
+                font-size: 0.6rem;
+            }
+            .history-item .rarity {
+                font-size: 0.7rem;
+            }
+            .history-item .card {
+                font-size: 0.7rem;
+            }
+            .collection-view .cv-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
+        }
+        @media (max-width: 400px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .stat-item .row1 {
+                font-size: 0.9rem;
+            }
+            .stat-item .row2 {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <header class="header">
+        <h1>幸win上上签</h1>
+        <div class="sub">📋 手动记录 · 昀边星球</div>
+    </header>
+
+    <!-- 满赠进度条 -->
+    <div class="progress-section">
+        <div class="progress-label">
+            <span>🎯 满赠进度</span>
+            <span id="progressText">0 / 168 抽</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width:0%;"></div>
+        </div>
+        <div class="progress-markers">
+            <span>10</span><span>20</span><span>35</span><span>50</span><span>66</span><span>80</span><span>97</span><span>108</span><span>128</span><span>168</span>
+        </div>
+    </div>
+
+    <!-- 统计面板 - 顺序调整为：图鉴进度 | 个人抽数 | 总张数 | 特殊奖池 | R | SR | SSR | PR -->
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-item completion">
+            <div class="label">📊 图鉴进度</div>
+            <div class="row1" id="completionRow1">0/0</div>
+            <div class="row2" id="completionRow2">0%</div>
+        </div>
+        <div class="stat-item total">
+            <div class="label">个人抽数</div>
+            <div class="row1" id="personalDraws">0</div>
+            <div class="row2" style="font-size:0.65rem;color:#6a8a9a;">（不含奖励）</div>
+        </div>
+        <div class="stat-item totalcards">
+            <div class="label">总张数</div>
+            <div class="row1" id="totalCardsCount">0</div>
+            <div class="row2" style="font-size:0.65rem;color:#6a8a9a;">含重复</div>
+        </div>
+        <!-- 特殊奖池提前 -->
+        <div class="stat-item special">
+            <div class="label">🎁 特殊奖池</div>
+            <div class="row1" id="specialRow1">0/6</div>
+            <div class="row2" id="specialRow2">总个数 0</div>
+        </div>
+        <div class="stat-item r">
+            <div class="label">R</div>
+            <div class="row1" id="rRow1">0/35</div>
+            <div class="row2" id="rRow2">总张数 0</div>
+        </div>
+        <div class="stat-item sr">
+            <div class="label">SR</div>
+            <div class="row1" id="srRow1">0/25</div>
+            <div class="row2" id="srRow2">总张数 0</div>
+        </div>
+        <div class="stat-item ssr">
+            <div class="label">SSR</div>
+            <div class="row1" id="ssrRow1">0/15</div>
+            <div class="row2" id="ssrRow2">总张数 0</div>
+        </div>
+        <div class="stat-item pr">
+            <div class="label">PR</div>
+            <div class="row1" id="prRow1">0/35</div>
+            <div class="row2" id="prRow2">总张数 0</div>
+        </div>
+    </div>
+
+    <!-- 个人满赠 -->
+    <div class="gift-section" id="giftSection">
+        <div class="gift-info">
+            <span class="gift-label">🎁 个人满赠</span>
+            <span class="gift-badge" id="giftBadge">0 抽</span>
+            <div class="gift-list" id="giftList">
+                <span class="gift-empty">暂无满赠卡</span>
+            </div>
+        </div>
+        <button class="btn-gift-reset" id="resetGiftBtn">重置满赠状态</button>
+    </div>
+
+    <!-- 记录表单 -->
+    <div class="record-form">
+        <div class="field">
+            <label for="raritySelect">稀有度</label>
+            <select id="raritySelect">
+                <option value="R">R</option>
+                <option value="SR">SR</option>
+                <option value="SSR">SSR</option>
+                <option value="PR">PR</option>
+                <option value="特殊奖池">特殊奖池</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="cardSelect">卡片/物品</label>
+            <select id="cardSelect"></select>
+        </div>
+        <button class="btn-record" id="recordBtn">📝 记录</button>
+    </div>
+
+    <!-- 宣传卡 -->
+    <div class="promo-section">
+        <div class="promo-info">
+            <span class="promo-label">📢 宣传卡 (PR19)</span>
+            <span class="promo-status" id="promoStatus">需累计抽数 ≥ 7 抽</span>
+        </div>
+        <button class="promo-btn" id="promoBtn" disabled>添加宣传卡</button>
+    </div>
+
+    <!-- 限时特典 + 端盒卡 + 全员满赠 -->
+    <div class="manual-pr-section" id="manualPrSection">
+        <div class="pr-group">
+            <span class="pr-group-label">⏳ 限时特典 <span style="font-weight:400;font-size:0.7rem;color:#4a7a8a;">(需≥10抽)</span></span>
+            <button class="pr-btn limited-btn" data-pr="PR15">PR15</button>
+            <button class="pr-btn limited-btn" data-pr="PR16">PR16</button>
+            <button class="pr-btn limited-btn" data-pr="PR17">PR17</button>
+            <button class="pr-btn limited-btn" data-pr="PR18">PR18</button>
+            <div class="pr-list" id="limitedList"><span class="pr-empty">未领取</span></div>
+        </div>
+        <div class="pr-group">
+            <span class="pr-group-label">📦 端盒卡</span>
+            <button class="pr-btn" data-pr="PR20">PR20</button>
+            <button class="pr-btn" data-pr="PR21">PR21</button>
+            <div class="pr-list" id="boxList"><span class="pr-empty">未添加</span></div>
+        </div>
+        <div class="pr-group">
+            <span class="pr-group-label">🎉 全员满赠 <span style="font-weight:400;font-size:0.7rem;color:#4a7a8a;">(需≥10抽)</span></span>
+            <button class="pr-btn allgift-btn" data-pr="PR22">PR22</button>
+            <button class="pr-btn allgift-btn" data-pr="PR23">PR23</button>
+            <button class="pr-btn allgift-btn" data-pr="PR24">PR24</button>
+            <button class="pr-btn allgift-btn" data-pr="PR25">PR25</button>
+            <button class="pr-btn allgift-btn" data-pr="PR26">PR26</button>
+            <button class="pr-btn allgift-btn" data-pr="PR27">PR27</button>
+            <button class="pr-btn allgift-btn" data-pr="PR28">PR28</button>
+            <button class="pr-btn allgift-btn" data-pr="PR29">PR29</button>
+            <button class="pr-btn allgift-btn" data-pr="PR30">PR30</button>
+            <button class="pr-btn allgift-btn" data-pr="PR31">PR31</button>
+            <button class="pr-btn allgift-btn" data-pr="PR32">PR32</button>
+            <button class="pr-btn allgift-btn" data-pr="PR33">PR33</button>
+            <button class="pr-btn allgift-btn" data-pr="PR34">PR34</button>
+            <button class="pr-btn allgift-btn" data-pr="PR35">PR35</button>
+            <div class="pr-list" id="allGiftList"><span class="pr-empty">未添加</span></div>
+        </div>
+    </div>
+
+    <!-- 保底兑换 -->
+    <div class="pity-section">
+        <div class="pity-title">🔄 保底兑换（拥有3张相同卡片 → 额外获得同等级任意1张，原卡保留）</div>
+        <div class="pity-row">
+            <select id="pityCardSelect">
+                <option value="">-- 选择重复卡（≥3张） --</option>
+            </select>
+            <select id="pityTargetSelect">
+                <option value="">-- 选择目标卡 --</option>
+            </select>
+            <button class="pity-btn" id="pityBtn">兑换</button>
+        </div>
+        <div class="pity-info" id="pityInfo">暂无可兑换的重复卡（需要同一卡片≥3张）</div>
+        <div class="pity-note">💡 例：3张 R1 → 额外获得 1张 R2（R1 保留，但可兑换数量减少）</div>
+    </div>
+
+    <!-- 历史流水账 -->
+    <div class="history-section">
+        <div class="history-title">
+            <span>📜 历史抽卡流水账</span>
+            <button class="clear-btn" id="clearBtn">清空全部</button>
+        </div>
+        <div class="history-list" id="historyList">
+            <div class="empty-history">还没有抽卡记录，快来添加吧～</div>
+        </div>
+    </div>
+
+    <!-- ===== 底部图鉴查看区 ===== -->
+    <div class="collection-view">
+        <div class="cv-title">📚 图鉴查看</div>
+        <div class="cv-controls">
+            <select id="cvFilter">
+                <option value="all">全部</option>
+                <option value="R">R</option>
+                <option value="SR">SR</option>
+                <option value="SSR">SSR</option>
+                <option value="PR">PR</option>
+                <option value="特殊奖池">特殊奖池</option>
+            </select>
+            <button id="cvExportBtn">📥 导出图鉴 (图片)</button>
+        </div>
+        <div class="cv-grid" id="cvGrid">
+            <div class="cv-empty">加载中...</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        // ============================================================
+        // 卡池数据
+        // ============================================================
+        const CARDS_MAP = {
+            'R': Array.from({ length: 35 }, (_, i) => `R${String(i + 1).padStart(2, '0')}`),
+            'SR': Array.from({ length: 25 }, (_, i) => `SR${String(i + 1).padStart(2, '0')}`),
+            'SSR': Array.from({ length: 15 }, (_, i) => `SSR${String(i + 1).padStart(2, '0')}`),
+            'PR': Array.from({ length: 35 }, (_, i) => `PR${String(i + 1).padStart(2, '0')}`),
+            '特殊奖池': ['RC多用膏', 'LILATOYS娃娃', '嘤鹰团子', '芒果年费', '102.8r红包', '6.5r红包']
+        };
+
+        const COLLECTION_TOTAL = 35 + 25 + 15 + 35; // 110
+
+        const GIFT_RULES = [
+            { threshold: 10,  cards: ['PR1', 'PR2'] },
+            { threshold: 20,  cards: ['PR3', 'PR4'] },
+            { threshold: 35,  cards: ['PR5', 'PR6'] },
+            { threshold: 50,  cards: ['PR7', 'PR8'] },
+            { threshold: 66,  cards: ['卡套', 'PR9'] },
+            { threshold: 80,  cards: ['PR10', 'PR11'] },
+            { threshold: 97,  cards: ['PR12', 'PR13', 'PR14'] },
+            { threshold: 108, cards: ['杜邦袋'] },
+            { threshold: 128, cards: ['卡册'] },
+            { threshold: 168, cards: ['冰霸杯'] }
+        ];
+        GIFT_RULES.sort((a, b) => a.threshold - b.threshold);
+
+        // ============================================================
+        // 状态
+        // ============================================================
+        let records = [];
+        let limitedUsed = { PR15: false, PR16: false, PR17: false, PR18: false };
+        let boxUsed = { PR20: false, PR21: false };
+        let allGiftUsed = {};
+        for (let i = 22; i <= 35; i++) {
+            allGiftUsed[`PR${i}`] = false;
+        }
+        let consumedMap = {};
+
+        // DOM 引用
+        const completionRow1 = document.getElementById('completionRow1');
+        const completionRow2 = document.getElementById('completionRow2');
+        const personalDrawsEl = document.getElementById('personalDraws');
+        const totalCardsCountEl = document.getElementById('totalCardsCount');
+        const rRow1 = document.getElementById('rRow1');
+        const rRow2 = document.getElementById('rRow2');
+        const srRow1 = document.getElementById('srRow1');
+        const srRow2 = document.getElementById('srRow2');
+        const ssrRow1 = document.getElementById('ssrRow1');
+        const ssrRow2 = document.getElementById('ssrRow2');
+        const prRow1 = document.getElementById('prRow1');
+        const prRow2 = document.getElementById('prRow2');
+        const specialRow1 = document.getElementById('specialRow1');
+        const specialRow2 = document.getElementById('specialRow2');
+
+        const historyList = document.getElementById('historyList');
+        const raritySelect = document.getElementById('raritySelect');
+        const cardSelect = document.getElementById('cardSelect');
+        const recordBtn = document.getElementById('recordBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const giftBadge = document.getElementById('giftBadge');
+        const giftList = document.getElementById('giftList');
+        const resetGiftBtn = document.getElementById('resetGiftBtn');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const pityCardSelect = document.getElementById('pityCardSelect');
+        const pityTargetSelect = document.getElementById('pityTargetSelect');
+        const pityBtn = document.getElementById('pityBtn');
+        const pityInfo = document.getElementById('pityInfo');
+        const promoBtn = document.getElementById('promoBtn');
+        const promoStatus = document.getElementById('promoStatus');
+        const limitedList = document.getElementById('limitedList');
+        const boxList = document.getElementById('boxList');
+        const allGiftList = document.getElementById('allGiftList');
+        const cvFilter = document.getElementById('cvFilter');
+        const cvExportBtn = document.getElementById('cvExportBtn');
+        const cvGrid = document.getElementById('cvGrid');
+
+        // ===== 更新卡片下拉 =====
+        function updateCardOptions() {
+            const rarity = raritySelect.value;
+            const cards = CARDS_MAP[rarity] || [];
+            cardSelect.innerHTML = '';
+            cards.forEach(card => {
+                const opt = document.createElement('option');
+                opt.value = card;
+                opt.textContent = card;
+                cardSelect.appendChild(opt);
+            });
+            if (cards.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '未知';
+                opt.textContent = '无选项';
+                cardSelect.appendChild(opt);
+            }
+        }
+        raritySelect.addEventListener('change', updateCardOptions);
+        updateCardOptions();
+
+        // ===== 辅助函数 =====
+        function formatTime(now) {
+            const pad = n => String(n).padStart(2, '0');
+            const y = now.getFullYear();
+            const mo = pad(now.getMonth() + 1);
+            const d = pad(now.getDate());
+            const h = pad(now.getHours());
+            const mi = pad(now.getMinutes());
+            return `${y}/${mo}/${d} ${h}:${mi}`;
+        }
+
+        function generateId() {
+            return Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+        }
+
+        function isGiftRecord(rec) { return rec.isGift === true; }
+        function isLimitedRecord(rec) { return rec.isLimited === true; }
+        function isExchangeRecord(rec) { return rec.isExchange === true; }
+        function isPromoRecord(rec) { return rec.rarity === '宣传卡'; }
+        function isSpecialItem(rec) { return rec.rarity === '特殊奖池'; }
+        function isManualPR(rec) { return rec.isManualPR === true; }
+        function isPRCard(rec) { return rec.rarity === 'PR'; }
+        function isRCard(rec) { return rec.rarity === 'R'; }
+        function isSRCard(rec) { return rec.rarity === 'SR'; }
+        function isSSRCard(rec) { return rec.rarity === 'SSR'; }
+
+        function isCollectionCard(rec) {
+            if (isPromoRecord(rec)) return false;
+            if (isSpecialItem(rec)) return false;
+            if (isPRCard(rec)) return true;
+            return ['R', 'SR', 'SSR'].includes(rec.rarity);
+        }
+
+        function isNormalDraw(rec) {
+            return !isGiftRecord(rec) && !isLimitedRecord(rec) && !isExchangeRecord(rec) && !isPromoRecord(rec) && !isManualPR(rec);
+        }
+
+        function getPersonalDraws() {
+            return records.filter(r => isNormalDraw(r) && (isRCard(r) || isSRCard(r) || isSSRCard(r) || isSpecialItem(r))).length;
+        }
+
+        function getTotalCards() {
+            return records.length;
+        }
+
+        // ===== 修正后的 getRarityStats =====
+        function getRarityStats(rarity) {
+            let total = 0;
+            let ownedSet = new Set();
+            let allCards = [];
+            if (rarity === 'R') { total = 35; allCards = CARDS_MAP['R']; }
+            else if (rarity === 'SR') { total = 25; allCards = CARDS_MAP['SR']; }
+            else if (rarity === 'SSR') { total = 15; allCards = CARDS_MAP['SSR']; }
+            else if (rarity === 'PR') { total = 35; allCards = CARDS_MAP['PR']; }
+            else if (rarity === '特殊奖池') { total = 6; allCards = CARDS_MAP['特殊奖池']; }
+            else return { collected: 0, total: 0, ownedSet: new Set(), totalCount: 0 };
+
+            let totalCount = 0;
+            records.forEach(r => {
+                if (r.rarity === rarity) {
+                    totalCount++;
+                    ownedSet.add(r.cardName);
+                }
+            });
+            // 对于PR，宣传卡PR19也计入PR收集
+            if (rarity === 'PR') {
+                records.forEach(r => {
+                    if (isPromoRecord(r)) {
+                        ownedSet.add('PR19');
+                        totalCount++;
+                    }
+                });
+            }
+            // 特殊奖池无需额外处理，因为上面已经统计了所有 rarity === '特殊奖池' 的记录
+            return { collected: ownedSet.size, total: total, ownedSet: ownedSet, totalCount: totalCount };
+        }
+
+        function getCollectionStats() {
+            const allCards = [];
+            ['R','SR','SSR','PR'].forEach(r => {
+                CARDS_MAP[r].forEach(c => allCards.push(c));
+            });
+            const allSet = new Set(allCards);
+            allSet.add('PR19');
+            const total = allSet.size; // 110
+            let owned = new Set();
+            records.forEach(r => {
+                if (isCollectionCard(r) || isPromoRecord(r)) {
+                    owned.add(r.cardName);
+                }
+            });
+            return { collected: owned.size, total: 110 };
+        }
+
+        // ===== 满赠相关 =====
+        function getTriggeredGiftIndices(actualDraws) {
+            const indices = [];
+            for (let i = 0; i < GIFT_RULES.length; i++) {
+                if (actualDraws >= GIFT_RULES[i].threshold) {
+                    indices.push(i);
+                }
+            }
+            return indices;
+        }
+
+        function getGiftedRuleIndices() {
+            const indices = [];
+            records.forEach(r => {
+                if (isGiftRecord(r) && r.giftRuleIndex !== undefined) {
+                    if (!indices.includes(r.giftRuleIndex)) {
+                        indices.push(r.giftRuleIndex);
+                    }
+                }
+            });
+            return indices;
+        }
+
+        function checkAndAddGifts() {
+            const actualDraws = getPersonalDraws();
+            const triggeredIndices = getTriggeredGiftIndices(actualDraws);
+            const giftedIndices = getGiftedRuleIndices();
+            const needToAddIndices = triggeredIndices.filter(idx => !giftedIndices.includes(idx));
+            if (needToAddIndices.length === 0) return;
+
+            const now = new Date();
+            const timeStr = formatTime(now);
+            const newGifts = [];
+            needToAddIndices.forEach(idx => {
+                const rule = GIFT_RULES[idx];
+                rule.cards.forEach(card => {
+                    newGifts.push({
+                        id: generateId(),
+                        time: timeStr,
+                        rarity: 'PR',
+                        cardName: card,
+                        isGift: true,
+                        giftRuleIndex: idx
+                    });
+                });
+            });
+            records.push(...newGifts);
+            records.sort((a, b) => a.time.localeCompare(b.time) || a.id.localeCompare(b.id));
+            saveToLocal();
+            updateAll();
+        }
+
+        function rebuildGifts() {
+            records = records.filter(r => !isGiftRecord(r));
+            checkAndAddGifts();
+        }
+
+        function resetGiftStatus() {
+            const giftCount = records.filter(r => isGiftRecord(r)).length;
+            if (giftCount === 0) {
+                alert('当前没有满赠卡记录需要重置');
+                return;
+            }
+            const confirmed = confirm('⚠️ 确定要重置满赠状态吗？这将删除所有已赠送的满赠卡记录，但不会影响您的抽卡记录。');
+            if (confirmed) {
+                records = records.filter(r => !isGiftRecord(r));
+                saveToLocal();
+                updateAll();
+                alert('✅ 已重置满赠状态');
+            }
+        }
+
+        // ===== 手动添加PR卡 =====
+        function addManualPR(prName, type) {
+            let usedMap;
+            if (type === 'limited') usedMap = limitedUsed;
+            else if (type === 'box') usedMap = boxUsed;
+            else if (type === 'allGift') usedMap = allGiftUsed;
+            else return;
+
+            const draws = getPersonalDraws();
+            if ((type === 'limited' || type === 'allGift') && draws < 10) {
+                alert(`${type === 'limited' ? '限时特典' : '全员满赠'}需要累计抽数达到 10 抽才能添加（当前 ${draws} 抽）`);
+                return;
+            }
+
+            if (usedMap[prName]) {
+                alert(`${prName} 已经添加过了`);
+                return;
+            }
+
+            const now = new Date();
+            const timeStr = formatTime(now);
+            records.push({
+                id: generateId(),
+                time: timeStr,
+                rarity: 'PR',
+                cardName: prName,
+                isGift: false,
+                isLimited: (type === 'limited'),
+                isExchange: false,
+                isManualPR: true,
+                prType: type
+            });
+            usedMap[prName] = true;
+            saveToLocal();
+            updateAll();
+            alert(`✅ 已添加 ${prName}`);
+        }
+
+        // ===== 保底兑换 =====
+        function performExchange() {
+            const fromCard = pityCardSelect.value;
+            const toCard = pityTargetSelect.value;
+            if (!fromCard || !toCard) {
+                alert('请选择要兑换的卡和目标卡');
+                return;
+            }
+            if (fromCard === toCard) {
+                alert('不能兑换为相同的卡');
+                return;
+            }
+            const fromRarity = fromCard.match(/^([A-Z]+)/)?.[1] || '';
+            const toRarity = toCard.match(/^([A-Z]+)/)?.[1] || '';
+            if (fromRarity !== toRarity) {
+                alert('只能兑换同等级的卡（R↔R, SR↔SR, SSR↔SSR）');
+                return;
+            }
+
+            const available = getAvailableExchangeCount(fromCard);
+            if (available < 3) {
+                alert(`${fromCard} 可用兑换数量不足3张（当前可用 ${available} 张）`);
+                return;
+            }
+
+            const alreadyOwned = records.some(r => r.cardName === toCard && isCollectionCard(r) && !isSpecialItem(r) && !isPRCard(r));
+            if (alreadyOwned) {
+                const confirmMsg = `⚠️ 您已拥有 ${toCard}，是否确认兑换？\n（兑换后仍可继续使用，不影响已有卡片）`;
+                if (!confirm(confirmMsg)) {
+                    return;
+                }
+            } else {
+                const confirmMsg = `确认使用 3张 ${fromCard} 兑换 1张 ${toCard} 吗？\n（原有的 ${fromCard} 保留，额外获得 ${toCard}）`;
+                if (!confirm(confirmMsg)) {
+                    return;
+                }
+            }
+
+            consumedMap[fromCard] = (consumedMap[fromCard] || 0) + 3;
+
+            const now = new Date();
+            records.push({
+                id: generateId(),
+                time: formatTime(now),
+                rarity: toRarity,
+                cardName: toCard,
+                isGift: false,
+                isLimited: false,
+                isExchange: true,
+                isManualPR: false
+            });
+
+            saveToLocal();
+            updateAll();
+            alert(`✅ 兑换成功！已额外获得 ${toCard}，${fromCard} 的可兑换数量已减少3张。`);
+        }
+
+        function getNormalDrawCount(cardName) {
+            return records.filter(r => isNormalDraw(r) && r.cardName === cardName && !isSpecialItem(r) && !isPRCard(r)).length;
+        }
+
+        function getAvailableExchangeCount(cardName) {
+            const total = getNormalDrawCount(cardName);
+            const consumed = consumedMap[cardName] || 0;
+            return total - consumed;
+        }
+
+        function getExchangeableCards() {
+            const result = [];
+            const cardSet = new Set();
+            records.forEach(r => {
+                if (isNormalDraw(r) && isCollectionCard(r) && !isPromoRecord(r) && !isSpecialItem(r) && !isPRCard(r)) {
+                    cardSet.add(r.cardName);
+                }
+            });
+            cardSet.forEach(name => {
+                if (getAvailableExchangeCount(name) >= 3) {
+                    result.push(name);
+                }
+            });
+            return result;
+        }
+
+        // ===== 宣传卡添加 =====
+        function addPromoCard() {
+            const actualDraws = getPersonalDraws();
+            if (actualDraws < 7) {
+                alert(`当前个人抽数为 ${actualDraws} 抽，需要达到 7 抽才能添加宣传卡。`);
+                return;
+            }
+            if (records.some(r => isPromoRecord(r))) {
+                alert('宣传卡已添加，不能重复添加。');
+                return;
+            }
+            const now = new Date();
+            const timeStr = formatTime(now);
+            records.push({
+                id: generateId(),
+                time: timeStr,
+                rarity: '宣传卡',
+                cardName: 'PR19',
+                isGift: false,
+                isLimited: false,
+                isExchange: false,
+                isManualPR: false
+            });
+            saveToLocal();
+            updateAll();
+            alert('✅ 宣传卡 PR19 已添加');
+        }
+
+        // ===== 删除处理 =====
+        function handleDelete(id) {
+            const index = records.findIndex(r => r.id === id);
+            if (index === -1) return;
+            const rec = records[index];
+
+            if (isLimitedRecord(rec)) {
+                const prName = rec.cardName;
+                if (limitedUsed[prName] !== undefined) {
+                    limitedUsed[prName] = false;
+                }
+            }
+            if (isManualPR(rec) && rec.prType === 'box') {
+                const prName = rec.cardName;
+                if (boxUsed[prName] !== undefined) {
+                    boxUsed[prName] = false;
+                }
+            }
+            if (isManualPR(rec) && rec.prType === 'allGift') {
+                const prName = rec.cardName;
+                if (allGiftUsed[prName] !== undefined) {
+                    allGiftUsed[prName] = false;
+                }
+            }
+
+            records.splice(index, 1);
+            rebuildGifts();
+            saveToLocal();
+            updateAll();
+        }
+
+        // ===== 更新UI =====
+        function updateStats() {
+            const draws = getPersonalDraws();
+            personalDrawsEl.textContent = draws;
+
+            totalCardsCountEl.textContent = getTotalCards();
+
+            const col = getCollectionStats();
+            completionRow1.textContent = `${col.collected}/${col.total}`;
+            const pct = col.total > 0 ? Math.round((col.collected / col.total) * 100) : 0;
+            completionRow2.textContent = pct + '%';
+
+            const rStats = getRarityStats('R');
+            rRow1.textContent = `${rStats.collected}/${rStats.total}`;
+            rRow2.textContent = `总张数 ${rStats.totalCount}`;
+
+            const srStats = getRarityStats('SR');
+            srRow1.textContent = `${srStats.collected}/${srStats.total}`;
+            srRow2.textContent = `总张数 ${srStats.totalCount}`;
+
+            const ssrStats = getRarityStats('SSR');
+            ssrRow1.textContent = `${ssrStats.collected}/${ssrStats.total}`;
+            ssrRow2.textContent = `总张数 ${ssrStats.totalCount}`;
+
+            const prStats = getRarityStats('PR');
+            prRow1.textContent = `${prStats.collected}/${prStats.total}`;
+            prRow2.textContent = `总张数 ${prStats.totalCount}`;
+
+            const spStats = getRarityStats('特殊奖池');
+            specialRow1.textContent = `${spStats.collected}/${spStats.total}`;
+            specialRow2.textContent = `总个数 ${spStats.totalCount}`;
+        }
+
+        function renderHistory() {
+            if (records.length === 0) {
+                historyList.innerHTML = `<div class="empty-history">还没有抽卡记录，快来添加吧～</div>`;
+                return;
+            }
+            let html = '';
+            const reversed = [...records].reverse();
+            reversed.forEach(rec => {
+                let rarityClass = rec.rarity.toLowerCase();
+                let displayRarity = rec.rarity;
+                if (isGiftRecord(rec)) {
+                    rarityClass = 'gift';
+                    displayRarity = '🎁';
+                } else if (isLimitedRecord(rec)) {
+                    rarityClass = 'limited';
+                    displayRarity = '⏳';
+                } else if (isExchangeRecord(rec)) {
+                    rarityClass = 'exchange';
+                    displayRarity = '🔄';
+                } else if (isPromoRecord(rec)) {
+                    rarityClass = 'promo';
+                    displayRarity = '📢';
+                } else if (isSpecialItem(rec)) {
+                    rarityClass = 'special';
+                    displayRarity = '🏆';
+                } else if (isManualPR(rec)) {
+                    rarityClass = 'manual';
+                    displayRarity = '✋';
+                }
+                html += `
+                    <div class="history-item">
+                        <span class="time">${rec.time}</span>
+                        <span class="rarity ${rarityClass}">${displayRarity}</span>
+                        <span class="card" title="${rec.cardName}">${rec.cardName}</span>
+                        <button class="del-btn" data-id="${rec.id}">✕</button>
+                    </div>
+                `;
+            });
+            historyList.innerHTML = html;
+
+            historyList.querySelectorAll('.del-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    handleDelete(id);
+                });
+            });
+        }
+
+        function updateGiftUI() {
+            const actualDraws = getPersonalDraws();
+            const triggeredIndices = getTriggeredGiftIndices(actualDraws);
+            const giftedIndices = getGiftedRuleIndices();
+
+            giftBadge.textContent = `${actualDraws} 抽`;
+            const pending = triggeredIndices.filter(idx => !giftedIndices.includes(idx));
+            if (pending.length > 0) {
+                giftBadge.classList.add('active');
+                giftBadge.textContent += ` ⭐ 可领 ${pending.length} 档`;
+            } else {
+                giftBadge.classList.remove('active');
+            }
+
+            const giftRecords = records.filter(r => isGiftRecord(r));
+            if (giftRecords.length === 0) {
+                giftList.innerHTML = `<span class="gift-empty">暂无满赠卡</span>`;
+            } else {
+                let html = '';
+                const sortedGifts = [...giftRecords].sort((a, b) => (a.giftRuleIndex || 0) - (b.giftRuleIndex || 0));
+                sortedGifts.forEach(r => {
+                    html += `<span class="gift-card">${r.cardName}</span>`;
+                });
+                giftList.innerHTML = html;
+            }
+        }
+
+        function updateProgress() {
+            const actualDraws = getPersonalDraws();
+            const maxThreshold = 168;
+            const pct = Math.min(100, (actualDraws / maxThreshold) * 100);
+            progressFill.style.width = pct + '%';
+            progressText.textContent = `${Math.min(actualDraws, maxThreshold)} / ${maxThreshold} 抽`;
+        }
+
+        function updateManualPRUI() {
+            const actualDraws = getPersonalDraws();
+
+            let limitedHtml = '';
+            const limitedRecords = records.filter(r => isLimitedRecord(r));
+            if (limitedRecords.length === 0) {
+                limitedHtml = `<span class="pr-empty">未领取</span>`;
+            } else {
+                limitedRecords.forEach(r => {
+                    limitedHtml += `<span class="pr-item">${r.cardName}</span>`;
+                });
+            }
+            limitedList.innerHTML = limitedHtml;
+
+            let boxHtml = '';
+            const boxRecords = records.filter(r => isManualPR(r) && r.prType === 'box');
+            if (boxRecords.length === 0) {
+                boxHtml = `<span class="pr-empty">未添加</span>`;
+            } else {
+                boxRecords.forEach(r => {
+                    boxHtml += `<span class="pr-item">${r.cardName}</span>`;
+                });
+            }
+            boxList.innerHTML = boxHtml;
+
+            let allGiftHtml = '';
+            const allGiftRecords = records.filter(r => isManualPR(r) && r.prType === 'allGift');
+            if (allGiftRecords.length === 0) {
+                allGiftHtml = `<span class="pr-empty">未添加</span>`;
+            } else {
+                allGiftRecords.forEach(r => {
+                    allGiftHtml += `<span class="pr-item">${r.cardName}</span>`;
+                });
+            }
+            allGiftList.innerHTML = allGiftHtml;
+
+            document.querySelectorAll('.pr-btn').forEach(btn => {
+                const pr = btn.dataset.pr;
+                let used = false;
+                let isLimited = false;
+                let isAllGift = false;
+                if (limitedUsed[pr] !== undefined) {
+                    used = limitedUsed[pr];
+                    isLimited = true;
+                } else if (boxUsed[pr] !== undefined) {
+                    used = boxUsed[pr];
+                } else if (allGiftUsed[pr] !== undefined) {
+                    used = allGiftUsed[pr];
+                    isAllGift = true;
+                }
+
+                if (used) {
+                    btn.classList.add('used');
+                    btn.disabled = true;
+                } else {
+                    btn.classList.remove('used');
+                    if ((isLimited || isAllGift) && actualDraws < 10) {
+                        btn.disabled = true;
+                    } else {
+                        btn.disabled = false;
+                    }
+                }
+            });
+        }
+
+        function updatePityUI() {
+            const exchangeable = getExchangeableCards();
+            const currentVal = pityCardSelect.value;
+            pityCardSelect.innerHTML = '<option value="">-- 选择重复卡（≥3张） --</option>';
+            exchangeable.forEach(name => {
+                const available = getAvailableExchangeCount(name);
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = `${name} (可换${available}张)`;
+                pityCardSelect.appendChild(opt);
+            });
+            if (currentVal && exchangeable.includes(currentVal)) {
+                pityCardSelect.value = currentVal;
+            } else if (exchangeable.length > 0) {
+                pityCardSelect.value = exchangeable[0];
+            }
+
+            const fromCard = pityCardSelect.value;
+            pityTargetSelect.innerHTML = '<option value="">-- 选择目标卡 --</option>';
+            if (fromCard) {
+                const rarity = fromCard.match(/^([A-Z]+)/)?.[1] || '';
+                const cards = CARDS_MAP[rarity] || [];
+                cards.forEach(name => {
+                    const opt = document.createElement('option');
+                    opt.value = name;
+                    const owned = records.some(r => r.cardName === name && isCollectionCard(r) && !isSpecialItem(r) && !isPRCard(r));
+                    opt.textContent = owned ? `${name} (已拥有)` : name;
+                    pityTargetSelect.appendChild(opt);
+                });
+                if (cards.length === 0) {
+                    pityTargetSelect.innerHTML = '<option value="">-- 无可用目标 --</option>';
+                }
+            }
+
+            if (exchangeable.length === 0) {
+                pityInfo.textContent = '暂无可兑换的重复卡（需要同一卡片≥3张）';
+            } else {
+                pityInfo.textContent = `可兑换的卡：${exchangeable.join('、')}`;
+            }
+        }
+
+        function updatePromoUI() {
+            const actualDraws = getPersonalDraws();
+            const alreadyAdded = records.some(r => isPromoRecord(r));
+            if (alreadyAdded) {
+                promoBtn.disabled = true;
+                promoStatus.textContent = '✅ 已添加 PR19';
+                return;
+            }
+            if (actualDraws >= 7) {
+                promoBtn.disabled = false;
+                promoStatus.textContent = '✅ 可添加（当前个人抽数 ' + actualDraws + ' 抽）';
+            } else {
+                promoBtn.disabled = true;
+                promoStatus.textContent = `需累计抽数 ≥ 7 抽（当前 ${actualDraws} 抽）`;
+            }
+        }
+
+        // ===== 图鉴查看区 =====
+        function renderCollectionView() {
+            const filter = cvFilter.value;
+            let allCards = [];
+            let ownedSet = new Set();
+
+            if (filter === 'all') {
+                ['R','SR','SSR','PR'].forEach(r => {
+                    CARDS_MAP[r].forEach(c => {
+                        allCards.push({ name: c, rarity: r });
+                    });
+                });
+                allCards.push({ name: 'PR19', rarity: 'PR' });
+                records.forEach(r => {
+                    if (isCollectionCard(r) || isPromoRecord(r)) {
+                        ownedSet.add(r.cardName);
+                    }
+                });
+            } else {
+                const cards = CARDS_MAP[filter] || [];
+                allCards = cards.map(name => ({ name, rarity: filter }));
+                if (filter === 'PR') {
+                    allCards.push({ name: 'PR19', rarity: 'PR' });
+                }
+                records.forEach(r => {
+                    if (r.rarity === filter) {
+                        ownedSet.add(r.cardName);
+                    }
+                    if (filter === 'PR' && isPromoRecord(r)) {
+                        ownedSet.add('PR19');
+                    }
+                });
+            }
+
+            if (allCards.length === 0) {
+                cvGrid.innerHTML = `<div class="cv-empty">暂无数据</div>`;
+                return;
+            }
+
+            let html = '';
+            allCards.forEach(item => {
+                const owned = ownedSet.has(item.name);
+                html += `<div class="cv-item ${owned ? 'owned' : 'missing'}">${item.name}</div>`;
+            });
+            cvGrid.innerHTML = html;
+        }
+
+        // ===== 导出图鉴为图片（仅已拥有） =====
+        function exportCollectionAsImage() {
+            const ownedItems = cvGrid.querySelectorAll('.cv-item.owned');
+            if (ownedItems.length === 0) {
+                alert('当前筛选下没有已拥有的卡片，无法导出');
+                return;
+            }
+
+            const missingItems = cvGrid.querySelectorAll('.cv-item.missing');
+            const originalDisplays = [];
+            missingItems.forEach((el, idx) => {
+                originalDisplays[idx] = el.style.display;
+                el.style.display = 'none';
+            });
+
+            const originalMaxHeight = cvGrid.style.maxHeight;
+            cvGrid.style.maxHeight = 'none';
+
+            html2canvas(cvGrid, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#f0f6fa',
+                logging: false,
+                width: cvGrid.scrollWidth,
+                height: cvGrid.scrollHeight,
+                windowWidth: cvGrid.scrollWidth,
+                windowHeight: cvGrid.scrollHeight
+            }).then(canvas => {
+                cvGrid.style.maxHeight = originalMaxHeight;
+                missingItems.forEach((el, idx) => {
+                    el.style.display = originalDisplays[idx] || '';
+                });
+                const link = document.createElement('a');
+                link.download = `图鉴_${cvFilter.value}_${new Date().toISOString().slice(0,10)}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                cvGrid.style.maxHeight = originalMaxHeight;
+                missingItems.forEach((el, idx) => {
+                    el.style.display = originalDisplays[idx] || '';
+                });
+                alert('导出图片失败，请重试');
+                console.error(err);
+            });
+        }
+
+        // ===== 更新全部 =====
+        function updateAll() {
+            updateStats();
+            renderHistory();
+            updateGiftUI();
+            updateProgress();
+            updateManualPRUI();
+            updatePityUI();
+            updatePromoUI();
+            renderCollectionView();
+        }
+
+        // ===== 添加记录 =====
+        function addRecord() {
+            const rarity = raritySelect.value;
+            const cardName = cardSelect.value;
+            if (!cardName || cardName === '无选项') {
+                alert('请选择有效的卡片或物品');
+                return;
+            }
+            const now = new Date();
+            const timeStr = formatTime(now);
+            const record = {
+                id: generateId(),
+                time: timeStr,
+                rarity: rarity,
+                cardName: cardName,
+                isGift: false,
+                isLimited: false,
+                isExchange: false,
+                isManualPR: false
+            };
+            records.push(record);
+            checkAndAddGifts();
+            saveToLocal();
+            updateAll();
+        }
+
+        // ===== 清空全部 =====
+        function clearAll() {
+            if (records.length === 0) {
+                alert('当前没有记录需要清空');
+                return;
+            }
+            const userConfirmed = confirm('⚠️ 确定要清空所有抽卡记录吗？此操作不可撤销！');
+            if (userConfirmed) {
+                records = [];
+                limitedUsed = { PR15: false, PR16: false, PR17: false, PR18: false };
+                boxUsed = { PR20: false, PR21: false };
+                for (let i = 22; i <= 35; i++) {
+                    allGiftUsed[`PR${i}`] = false;
+                }
+                consumedMap = {};
+                saveToLocal();
+                updateAll();
+                alert('✅ 已清空所有记录');
+            }
+        }
+
+        // ===== localStorage =====
+        function saveToLocal() {
+            try {
+                const data = { records, limitedUsed, boxUsed, allGiftUsed, consumedMap };
+                localStorage.setItem('luckDrawRecords', JSON.stringify(data));
+            } catch (e) {
+                console.warn('保存失败:', e);
+            }
+        }
+
+        function loadFromLocal() {
+            try {
+                const raw = localStorage.getItem('luckDrawRecords');
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed.records && Array.isArray(parsed.records)) {
+                        records = parsed.records;
+                        records.forEach(r => {
+                            if (!r.id) r.id = generateId();
+                            if (r.isGift === undefined) r.isGift = false;
+                            if (r.isLimited === undefined) r.isLimited = false;
+                            if (r.isExchange === undefined) r.isExchange = false;
+                            if (r.isManualPR === undefined) r.isManualPR = false;
+                        });
+                        if (parsed.limitedUsed) limitedUsed = parsed.limitedUsed;
+                        if (parsed.boxUsed) boxUsed = parsed.boxUsed;
+                        if (parsed.allGiftUsed) allGiftUsed = parsed.allGiftUsed;
+                        if (parsed.consumedMap) consumedMap = parsed.consumedMap;
+                        rebuildGifts();
+                        updateAll();
+                        return true;
+                    }
+                }
+            } catch (e) {
+                console.warn('加载失败:', e);
+            }
+            return false;
+        }
+
+        // ===== 初始化 =====
+        function init() {
+            const loaded = loadFromLocal();
+            if (!loaded) {
+                records = [];
+                limitedUsed = { PR15: false, PR16: false, PR17: false, PR18: false };
+                boxUsed = { PR20: false, PR21: false };
+                for (let i = 22; i <= 35; i++) {
+                    allGiftUsed[`PR${i}`] = false;
+                }
+                consumedMap = {};
+                updateAll();
+            }
+
+            recordBtn.addEventListener('click', addRecord);
+            clearBtn.addEventListener('click', clearAll);
+            resetGiftBtn.addEventListener('click', resetGiftStatus);
+
+            document.querySelectorAll('.pr-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const pr = this.dataset.pr;
+                    let type = 'limited';
+                    if (boxUsed[pr] !== undefined) type = 'box';
+                    if (allGiftUsed[pr] !== undefined) type = 'allGift';
+                    addManualPR(pr, type);
+                });
+            });
+
+            pityCardSelect.addEventListener('change', updatePityUI);
+            pityBtn.addEventListener('click', performExchange);
+
+            promoBtn.addEventListener('click', addPromoCard);
+
+            cvFilter.addEventListener('change', renderCollectionView);
+            cvExportBtn.addEventListener('click', exportCollectionAsImage);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && (e.target === raritySelect || e.target === cardSelect)) {
+                    e.preventDefault();
+                    addRecord();
+                }
+            });
+
+            console.log('✅ 幸win上上签 已启动！');
+            console.log('📋 R:35, SR:25, SSR:15, PR:35, 特殊奖池:6');
+            console.log('📊 图鉴总数: 110 (R+SR+SSR+PR)');
+            console.log('📈 个人抽数 = R+SR+SSR+特殊奖池 (不含PR)');
+            console.log('⏳ 限时特典需≥10抽 | 全员满赠需≥10抽 | 端盒卡无限制');
+            console.log('📸 导出图鉴为图片 (仅已拥有)');
+        }
+
+        init();
+    })();
+</script>
+</body>
+</html>
